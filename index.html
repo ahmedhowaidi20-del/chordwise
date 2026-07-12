@@ -106,7 +106,7 @@ font-size:10px;
 color:#aaa}.slot strong,.card strong{font:400 34px Georgia,serif}.slot small,.card small{font-size:10px;
 color:#888}.slot i{font-style:normal;
 color:var(--orange);
-font-size:10px}.suggest-box{margin-top:28px;
+font-size:10px}.suggestions{grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}.suggest-box{margin-top:28px;
 padding:23px;
 background:#f1ede6;
 border-radius:12px}.suggest-head{margin-bottom:16px}.suggest-head h2{font-size:14px;
@@ -258,7 +258,7 @@ $('#suggest-title').textContent=current?'Alternatives for '+current.name:active=
 $('#suggest-sub').textContent=current?'Swap this chord without losing the musical flow.':active===0?`The I chord establishes ${key} major clearly.`:'Based on your progression so far';
 let cards=$('#suggestions');
 cards.innerHTML='';
-scale().filter(c=>c.degree!==current?.degree).map(c=>({c,s:score(c.degree)})).sort((a,b)=>b.s-a.s).slice(0,4).forEach(({c},i)=>{let b=document.createElement('button');
+scale().filter(c=>c.degree!==current?.degree).map(c=>({c,s:score(c.degree)})).sort((a,b)=>b.s-a.s).forEach(({c},i)=>{let b=document.createElement('button');
 b.className='card';
 b.innerHTML=`<span class="badge">${i===0?'Best fit':i===1?'Strong':'Works'}</span><strong>${c.name}</strong><small>${c.roman} in ${key} major</small><p>${c.reason}</p><span class="add">Add to slot ${active+1}<b>→</b></span>`;
 b.onclick=()=>{prog[active]=c;
