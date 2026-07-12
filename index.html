@@ -30,7 +30,17 @@ border:1.5px solid;
 border-radius:50%;
 font-family:Georgia,serif;
 font-style:italic;
-font-size:12px}.save,.play{border:0;
+font-size:12px}.nav-actions{display:flex;
+gap:8px;
+align-items:center}.circle-open{width:42px;
+height:42px;
+border:1px solid var(--line);
+border-radius:50%;
+background:var(--paper);
+font:700 11px Georgia,serif;
+line-height:1;
+color:var(--green)}.circle-open:hover{border-color:var(--orange);
+color:var(--orange)}.save,.play{border:0;
 border-radius:8px;
 padding:11px 15px;
 background:var(--ink);
@@ -157,21 +167,75 @@ opacity:0;
 transform:translateY(10px);
 transition:.2s;
 pointer-events:none}.toast.show{opacity:1;
-transform:none}@media(max-width:720px){nav{height:66px}.save{padding:9px 11px}.hero{padding-top:48px}h1{letter-spacing:-2px}.studio{margin:0 12px 65px;
+transform:none}.circle-dialog{width:min(760px,calc(100vw - 24px));
+max-height:94vh;
+padding:0;
+border:1px solid var(--line);
+border-radius:18px;
+background:var(--paper);
+box-shadow:0 30px 90px #1d1c1a55}.circle-dialog::backdrop{background:#1d1c1a99;
+backdrop-filter:blur(4px)}.circle-shell{padding:22px}.circle-head{display:flex;
+align-items:flex-start;
+justify-content:space-between;
+gap:20px}.circle-head h2{margin:4px 0;
+font:400 30px Georgia,serif}.circle-head p{margin:0;
+color:var(--muted);
+font-size:12px;
+line-height:1.5}.circle-close{border:1px solid var(--line);
+border-radius:50%;
+background:white;
+width:36px;
+height:36px;
+font-size:20px}.fifths-wrap{max-width:620px;
+margin:8px auto 0}.fifths-svg{display:block;
+width:100%;
+height:auto;
+overflow:visible}.fifth-key{cursor:pointer}.fifth-key circle{fill:#f1ede6;
+stroke:#cfc7bc;
+stroke-width:1.5;
+transition:.18s}.fifth-key text{font:600 15px Georgia,serif;
+text-anchor:middle;
+dominant-baseline:middle;
+pointer-events:none}.fifth-key.related circle{fill:#dce9df;
+stroke:#86a99c}.fifth-key.active circle{fill:var(--orange);
+stroke:var(--orange)}.fifth-key.active text{fill:white}.chord-node circle{fill:white;
+stroke:#bcb4a9;
+stroke-width:1.4}.chord-node text{font:600 13px Georgia,serif;
+text-anchor:middle;
+dominant-baseline:middle}.chord-node text.degree{font:700 7px Arial,sans-serif;
+fill:var(--orange)}.chord-link{stroke:#b9cfc5;
+stroke-width:1.5;
+opacity:.85}.wheel-ring{fill:none;
+stroke:#ddd7ce;
+stroke-width:1}.wheel-title{font:400 24px Georgia,serif;
+text-anchor:middle}.wheel-sub{font:10px Arial,sans-serif;
+fill:#777;
+text-anchor:middle}.circle-tip{text-align:center;
+font-size:11px;
+color:var(--muted);
+margin-top:-4px}@media(max-width:720px){nav{height:66px}.save{padding:9px 11px}.circle-open{width:38px;
+height:38px}.hero{padding-top:48px}h1{letter-spacing:-2px}.studio{margin:0 12px 65px;
 padding:18px}.slots,.suggestions{grid-template-columns:1fr 1fr}.suggest-head p{display:none}.steps{grid-template-columns:1fr}.how{padding-top:55px;
-padding-bottom:55px}}@media(max-width:420px){.slots{gap:8px}.slot{min-height:130px}.suggestions{grid-template-columns:1fr}.actions .clear{display:none}.play{font-size:12px}}
+padding-bottom:55px}.circle-shell{padding:16px}.circle-head h2{font-size:24px}}@media(max-width:420px){.slots{gap:8px}.slot{min-height:130px}.suggestions{grid-template-columns:1fr}.actions .clear{display:none}.play{font-size:12px}.save{display:none}.fifth-key text{font-size:13px}.chord-node text{font-size:11px}}
 </style></head><body>
-<nav><div class="brand"><span class="mark">cw</span> chordwise</div><button class="save" id="save">Save progression</button></nav>
+<nav><div class="brand"><span class="mark">cw</span> chordwise</div><div class="nav-actions"><button class="circle-open" id="circle-open" aria-label="Open interactive Circle of Fifths" title="Circle of Fifths">5ths</button><button class="save" id="save">Save progression</button></div></nav>
 <section class="hero"><div class="eyebrow">✦ A smarter way to write harmony</div><h1>Find the chords that<br><em>belong together.</em></h1><p>Build a progression one chord at a time. We’ll suggest what fits next—and help you explore alternatives that still sound right.</p></section>
 <main class="studio"><div class="toolbar"><div><div class="label">Key</div><div class="keyrow"><select id="key" aria-label="Musical key"></select><span>Major</span></div></div><div class="actions"><button class="clear" id="clear">Clear all</button><div class="beat-control"><label for="beats">Beats / chord</label><select id="beats" aria-label="Beats per chord"><option value="1">1 beat</option><option value="2">2 beats</option><option value="3">3 beats</option><option value="4" selected>4 beats</option></select></div><button class="play" id="play" disabled>▶ Play progression</button></div></div>
 <div class="progress-title label"><span>Your progression</span><span id="count">0 of 4 chords</span></div><div class="slots" id="slots"></div>
 <div class="suggest-box"><div class="suggest-head"><h2 id="suggest-title">Start with the home chord</h2><p id="suggest-sub">The I chord establishes the key clearly.</p></div><div class="suggestions" id="suggestions"></div></div><div class="complete" id="complete">✦ Nice progression. Select any chord above to explore another harmonic path.</div></main>
-<section class="how"><div class="eyebrow">How it works</div><h2>Music theory, without the homework.</h2><div class="steps"><article><h3>01 · Choose your key</h3><p>Pick the musical home base. We map every chord that naturally belongs.</p></article><article><h3>02 · Follow suggestions</h3><p>Recommendations consider the chords you already chose, not only the key.</p></article><article><h3>03 · Make it yours</h3><p>Swap any chord for a compatible alternative until it feels like you.</p></article></div></section><footer><div class="brand"><span class="mark">cw</span> chordwise</div><span>Write something worth hearing.</span></footer><div class="toast" id="toast">Progression saved on this device</div>
+<section class="how"><div class="eyebrow">How it works</div><h2>Music theory, without the homework.</h2><div class="steps"><article><h3>01 · Choose your key</h3><p>Pick the musical home base. We map every chord that naturally belongs.</p></article><article><h3>02 · Follow suggestions</h3><p>Recommendations consider the chords you already chose, not only the key.</p></article><article><h3>03 · Make it yours</h3><p>Swap any chord for a compatible alternative until it feels like you.</p></article></div></section><footer><div class="brand"><span class="mark">cw</span> chordwise</div><span>Write something worth hearing.</span></footer><dialog class="circle-dialog" id="circle-dialog"><div class="circle-shell"><div class="circle-head"><div><div class="eyebrow">Interactive theory map</div><h2>Circle of Fifths</h2><p>Point to a key—or tap it—to reveal the seven chords that belong to it.</p></div><button class="circle-close" id="circle-close" aria-label="Close Circle of Fifths">×</button></div><div class="fifths-wrap"><svg class="fifths-svg" id="fifths-svg" viewBox="0 0 620 620" role="img" aria-label="Interactive Circle of Fifths"></svg></div><p class="circle-tip">Click a major key to use it in your progression.</p></div></dialog><div class="toast" id="toast">Progression saved on this device</div>
 <script>
 (()=>{const N=['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'],steps=[0,2,4,5,7,9,11],q=['','m','m','','','m','dim'],roman=['I','ii','iii','IV','V','vi','vii°'],trans=[[5,3,4,1,2],[4,6,0,5],[5,3,1,4],[4,0,1,5],[0,5,3,1],[3,1,4,0,2],[0,2,5]],reason=['Home — settled and complete','Gentle motion toward the dominant','A softer, reflective turn','Warm lift and strong contrast','Tension that wants to come home','Emotional relative-minor color','Unstable pull into resolution'];
 let key='C',prog=[null,null,null,null],active=0,playing=false;
 const $=s=>document.querySelector(s),keyEl=$('#key');
 N.forEach(n=>keyEl.add(new Option(n,n)));
+const wheelKeys=[['C','C'],['G','G'],['D','D'],['A','A'],['E','E'],['B','B'],['F#','F#'],['C#','C#'],['A♭','G#'],['E♭','D#'],['B♭','A#'],['F','F']],wheelChords={C:['C','Dm','Em','F','G','Am','Bdim'],G:['G','Am','Bm','C','D','Em','F#dim'],D:['D','Em','F#m','G','A','Bm','C#dim'],A:['A','Bm','C#m','D','E','F#m','G#dim'],E:['E','F#m','G#m','A','B','C#m','D#dim'],B:['B','C#m','D#m','E','F#','G#m','A#dim'],'F#':['F#','G#m','A#m','B','C#','D#m','Fdim'],'C#':['C#','D#m','Fm','F#','G#','A#m','Cdim'],'A♭':['A♭','B♭m','Cm','D♭','E♭','Fm','Gdim'],'E♭':['E♭','Fm','Gm','A♭','B♭','Cm','Ddim'],'B♭':['B♭','Cm','Dm','E♭','F','Gm','Adim'],F:['F','Gm','Am','B♭','C','Dm','Edim']},degrees=['I','ii','iii','IV','V','vi','vii°'],svgNS='http://www.w3.org/2000/svg',circleDialog=$('#circle-dialog'),fifthsSvg=$('#fifths-svg');
+function svgEl(tag,attrs={},text=''){let el=document.createElementNS(svgNS,tag);Object.entries(attrs).forEach(([k,v])=>el.setAttribute(k,v));if(text)el.textContent=text;return el}
+function point(radius,index,total=12){let a=(index/total)*Math.PI*2-Math.PI/2;return{x:310+Math.cos(a)*radius,y:310+Math.sin(a)*radius}}
+function drawFifths(activeLabel='C'){fifthsSvg.innerHTML='';fifthsSvg.append(svgEl('circle',{cx:310,cy:310,r:285,class:'wheel-ring'}),svgEl('circle',{cx:310,cy:310,r:210,class:'wheel-ring'}));let activeIndex=wheelKeys.findIndex(k=>k[0]===activeLabel),activePoint=point(255,activeIndex),chords=wheelChords[activeLabel];let linkLayer=svgEl('g');chords.forEach((_,i)=>{let p=point(132,i,7);linkLayer.append(svgEl('line',{x1:activePoint.x,y1:activePoint.y,x2:p.x,y2:p.y,class:'chord-link'}))});fifthsSvg.append(linkLayer);wheelKeys.forEach(([label,root],i)=>{let p=point(255,i),g=svgEl('g',{class:'fifth-key'+(i===activeIndex?' active':Math.abs(i-activeIndex)===1||Math.abs(i-activeIndex)===11?' related':''),tabindex:'0',role:'button','aria-label':label+' major'});g.append(svgEl('circle',{cx:p.x,cy:p.y,r:28}),svgEl('text',{x:p.x,y:p.y},label));let show=()=>drawFifths(label);g.addEventListener('pointerenter',show);g.addEventListener('focus',show);g.addEventListener('click',()=>{key=root;keyEl.value=root;prog=[null,null,null,null];active=0;render();drawFifths(label)});g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();g.dispatchEvent(new Event('click'))}});fifthsSvg.append(g)});chords.forEach((chord,i)=>{let p=point(132,i,7),g=svgEl('g',{class:'chord-node'});g.append(svgEl('circle',{cx:p.x,cy:p.y,r:25}),svgEl('text',{x:p.x,y:p.y-3},chord),svgEl('text',{x:p.x,y:p.y+13,class:'degree'},degrees[i]));fifthsSvg.append(g)});fifthsSvg.append(svgEl('text',{x:310,y:298,class:'wheel-title'},activeLabel+' major'),svgEl('text',{x:310,y:320,class:'wheel-sub'},'7 diatonic chords'),svgEl('text',{x:310,y:338,class:'wheel-sub'},'neighbors share the most notes'))}
+$('#circle-open').onclick=()=>{drawFifths(wheelKeys.find(k=>k[1]===key)?.[0]||'C');circleDialog.showModal()};
+$('#circle-close').onclick=()=>circleDialog.close();
+circleDialog.addEventListener('click',e=>{if(e.target===circleDialog)circleDialog.close()});
 function scale(){let r=N.indexOf(key);
 return steps.map((s,d)=>({name:N[(r+s)%12]+q[d],degree:d,roman:roman[d],reason:reason[d]}))}function score(d){let prev=prog[active-1],x=prev?10-trans[prev.degree].indexOf(d):d===0?12:2;
 if(prev&&trans[prev.degree].indexOf(d)<0)x=1;
