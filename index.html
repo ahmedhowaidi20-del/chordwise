@@ -65,7 +65,16 @@ margin-top:8px}.keyrow>*{padding:10px 13px;
 border:1px solid var(--line);
 border-radius:8px;
 background:white}.actions{display:flex;
-gap:8px}.clear{border:0;
+gap:8px;
+align-items:flex-end}.beat-control{display:flex;
+flex-direction:column;
+gap:5px}.beat-control label{font-size:9px;
+text-transform:uppercase;
+letter-spacing:.9px;
+color:var(--muted)}.beat-control select{padding:10px 28px 10px 10px;
+border:1px solid var(--line);
+border-radius:8px;
+background:white}.clear{border:0;
 background:none;
 color:var(--muted)}.play{background:var(--green)}.play:disabled{opacity:.45}.progress-title{margin:27px 0 10px}.slots,.suggestions{display:grid;
 grid-template-columns:repeat(4,1fr);
@@ -154,7 +163,7 @@ padding-bottom:55px}}@media(max-width:420px){.slots{gap:8px}.slot{min-height:130
 </style></head><body>
 <nav><div class="brand"><span class="mark">cw</span> chordwise</div><button class="save" id="save">Save progression</button></nav>
 <section class="hero"><div class="eyebrow">✦ A smarter way to write harmony</div><h1>Find the chords that<br><em>belong together.</em></h1><p>Build a progression one chord at a time. We’ll suggest what fits next—and help you explore alternatives that still sound right.</p></section>
-<main class="studio"><div class="toolbar"><div><div class="label">Key</div><div class="keyrow"><select id="key" aria-label="Musical key"></select><span>Major</span></div></div><div class="actions"><button class="clear" id="clear">Clear all</button><button class="play" id="play" disabled>▶ Play progression</button></div></div>
+<main class="studio"><div class="toolbar"><div><div class="label">Key</div><div class="keyrow"><select id="key" aria-label="Musical key"></select><span>Major</span></div></div><div class="actions"><button class="clear" id="clear">Clear all</button><div class="beat-control"><label for="beats">Beats / chord</label><select id="beats" aria-label="Beats per chord"><option value="1">1 beat</option><option value="2">2 beats</option><option value="3">3 beats</option><option value="4" selected>4 beats</option></select></div><button class="play" id="play" disabled>▶ Play progression</button></div></div>
 <div class="progress-title label"><span>Your progression</span><span id="count">0 of 4 chords</span></div><div class="slots" id="slots"></div>
 <div class="suggest-box"><div class="suggest-head"><h2 id="suggest-title">Start with the home chord</h2><p id="suggest-sub">The I chord establishes the key clearly.</p></div><div class="suggestions" id="suggestions"></div></div><div class="complete" id="complete">✦ Nice progression. Select any chord above to explore another harmonic path.</div></main>
 <section class="how"><div class="eyebrow">How it works</div><h2>Music theory, without the homework.</h2><div class="steps"><article><h3>01 · Choose your key</h3><p>Pick the musical home base. We map every chord that naturally belongs.</p></article><article><h3>02 · Follow suggestions</h3><p>Recommendations consider the chords you already chose, not only the key.</p></article><article><h3>03 · Make it yours</h3><p>Swap any chord for a compatible alternative until it feels like you.</p></article></div></section><footer><div class="brand"><span class="mark">cw</span> chordwise</div><span>Write something worth hearing.</span></footer><div class="toast" id="toast">Progression saved on this device</div>
@@ -208,20 +217,20 @@ $('#play').onclick=()=>{let chosen=prog.filter(Boolean);
 if(!chosen.length||playing)return;
 playing=true;
 render();
-let AC=window.AudioContext||window.webkitAudioContext,ctx=new AC;
+let AC=window.AudioContext||window.webkitAudioContext,ctx=new AC,beats=Number($('#beats').value),chordSeconds=beats*.6;
 chosen.forEach((c,i)=>{let root=N.indexOf(c.name.replace('dim','').replace('m','')),ints=c.name.includes('dim')?[0,3,6]:c.name.endsWith('m')?[0,3,7]:[0,4,7];
-ints.forEach(n=>{let o=ctx.createOscillator(),g=ctx.createGain(),t=ctx.currentTime+i*.72;
+ints.forEach(n=>{let o=ctx.createOscillator(),g=ctx.createGain(),t=ctx.currentTime+i*chordSeconds;
 o.type='triangle';
 o.frequency.value=220*Math.pow(2,(root+n-9)/12);
 g.gain.setValueAtTime(.001,t);
 g.gain.linearRampToValueAtTime(.08,t+.04);
-g.gain.exponentialRampToValueAtTime(.001,t+.62);
+g.gain.exponentialRampToValueAtTime(.001,t+Math.max(.25,chordSeconds-.08));
 o.connect(g).connect(ctx.destination);
 o.start(t);
-o.stop(t+.65)})});
+o.stop(t+chordSeconds)})});
 setTimeout(()=>{playing=false;
 ctx.close();
-render()},chosen.length*720+200)};
+render()},chosen.length*chordSeconds*1000+200)};
 try{let saved=JSON.parse(localStorage.getItem('chordwise-progression'));
 if(saved?.key&&saved?.prog){key=saved.key;
 prog=saved.prog;
